@@ -507,6 +507,12 @@ require('lazy').setup({
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
       local servers = {
+        ['csharp-language-server'] = {
+          root_dir = function(fname)
+            local util = require 'lspconfig.util'
+            return util.root_pattern('*.sln', '.git', '*.csproj')(fname)
+          end,
+        },
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -530,6 +536,11 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'lua-language-server', -- Lua Language server
         'stylua', -- Used to format Lua code
+        'markdownlint', -- Adds linting for Markdown
+        'cpptools', -- Debugger for C/C++
+        'csharpier', -- Formatter for C#
+        'netcoredbg', -- Debugger for C#
+        'csharp-language-server', -- C# Language Server
         -- You can add other tools here that you want Mason to install
       })
 
@@ -600,6 +611,9 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        c = { 'clang-format' },
+        cpp = { 'clang-format' },
+        cs = { 'csharpier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -786,10 +800,10 @@ require('lazy').setup({
   --
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
